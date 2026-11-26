@@ -208,6 +208,42 @@ details p{color:var(--muted);padding:0 0 24px;max-width:62ch}
 .dl svg{width:22px;height:22px}
 .finale .mono{color:var(--faint)}
 
+/* ---------- after-download guide ---------- */
+.guide{border:0;padding:0;background:transparent;color:var(--ink);max-width:none;max-height:none;width:100%;height:100%;inset:0;position:fixed}
+.guide::backdrop{background:rgba(4,3,8,.72);backdrop-filter:blur(6px)}
+.guide[open]{display:grid;place-items:center}
+.g-card{width:min(760px,calc(100vw - 48px));background:linear-gradient(180deg,#1b1628,#0f0c18);border:1px solid var(--line-2);border-radius:24px;padding:30px 32px 26px;box-shadow:0 40px 120px -20px rgba(0,0,0,.8);animation:gIn .45s var(--ease)}
+@keyframes gIn{from{opacity:0;transform:translateY(18px) scale(.98)}}
+.g-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+.g-head h3{font-weight:800;font-size:30px;letter-spacing:-.03em;line-height:1.05}
+.g-head p{color:var(--muted);margin-top:6px}
+.g-x{width:36px;height:36px;border-radius:50%;border:1px solid var(--line-2);color:var(--muted);font-size:18px;flex:none}
+.g-x:hover{color:var(--ink);background:rgba(255,255,255,.06)}
+.g-steps{display:grid;grid-template-columns:1fr 1.15fr;gap:26px;margin-top:22px;align-items:start}
+.g-list{list-style:none;display:flex;flex-direction:column;gap:14px;counter-reset:g}
+.g-list li{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;counter-increment:g}
+.g-list li::before{content:counter(g);width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:14px;background:rgba(255,255,255,.08);border:1px solid var(--line-2)}
+.g-list li.key::before{background:var(--accent);color:#120810;border:0}
+.g-list b{display:block;font-weight:700;letter-spacing:-.01em}
+.g-list span{color:var(--muted);font-size:15px;line-height:1.45}
+.g-list kbd{font-family:var(--mono);font-size:12.5px;padding:2px 7px;border-radius:6px;background:rgba(255,255,255,.08);border:1px solid var(--line-2);color:var(--ink)}
+.ss{position:relative;border-radius:14px;overflow:hidden;background:#0a62b8;color:#fff;font-family:"Segoe UI",system-ui,sans-serif;padding:22px 22px 66px;min-height:250px;box-shadow:0 20px 60px -20px rgba(10,98,184,.6)}
+.ss h4{font-weight:300;font-size:25px;line-height:1.15;margin-bottom:12px}
+.ss p{font-size:13px;line-height:1.45;opacity:.95;max-width:34ch}
+.ss .more{display:inline-block;margin-top:10px;font-size:13px;text-decoration:underline;position:relative}
+.ss .meta{font-size:12.5px;margin-top:10px;line-height:1.6;opacity:0;transition:opacity .4s}
+.ss .btns{position:absolute;right:16px;bottom:16px;display:flex;gap:8px}
+.ss .btns span{font-size:13px;padding:6px 18px;border:2px solid rgba(255,255,255,.9);background:transparent}
+.ss .run{opacity:0;transition:opacity .4s}
+.ss .tap{position:absolute;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.9);box-shadow:0 0 0 0 rgba(255,255,255,.7);transition:left .7s var(--ease),top .7s var(--ease);animation:tap 1.4s ease-out infinite;pointer-events:none}
+@keyframes tap{0%{box-shadow:0 0 0 0 rgba(255,255,255,.7);transform:scale(1)}15%{transform:scale(.85)}30%{transform:scale(1)}100%{box-shadow:0 0 0 22px rgba(255,255,255,0)}}
+.ss.step2 .meta,.ss.step2 .run{opacity:1}
+.ss-cap{margin-top:10px;color:var(--muted);font-size:13.5px;text-align:center}
+.ss-cap b{color:var(--ink)}
+.g-foot{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:24px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+.g-foot a{color:var(--ink);text-decoration:underline}
+.g-ok{height:44px;padding:0 22px;border-radius:999px;background:var(--ink);color:#0A0910;font-weight:800}
+
 footer{padding:34px var(--pad) 46px;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:var(--faint)}
 
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
@@ -413,10 +449,45 @@ footer{padding:34px var(--pad) 46px;border-top:1px solid var(--line);display:fle
 <section class="finale" id="get" data-pal="9" aria-labelledby="getTitle">
   <h2 id="getTitle" class="reveal">Turn it <span class="serif grad">up.</span></h2>
   <p class="sub reveal">One small download. Your screen won't look the same with music on.</p>
-  <a class="dl reveal" href="Rimlight.exe" download><svg aria-hidden="true"><use href="#i-win"/></svg>Download for Windows</a>
-  <p class="mono reveal">Windows 10 &amp; 11 · 64‑bit · no account · no installer</p>
+  <a class="dl reveal" id="downloadBtn" href="Rimlight.zip" download><svg aria-hidden="true"><use href="#i-win"/></svg>Download for Windows</a>
+  <p class="mono reveal">Windows 10 &amp; 11 · 64‑bit · no account · no installer · free</p>
 </section>
 </main>
+
+<!-- shown right after clicking Download: what to do next, and why Windows shows a warning -->
+<dialog class="guide" id="guide" aria-labelledby="guideTitle">
+  <div class="g-card">
+    <div class="g-head">
+      <div>
+        <h3 id="guideTitle">Your download has started 🎉</h3>
+        <p>Three quick steps and your screen lights up.</p>
+      </div>
+      <button class="g-x" type="button" id="guideClose" aria-label="Close">✕</button>
+    </div>
+    <div class="g-steps">
+      <ol class="g-list">
+        <li><div><b>Unzip it</b><span>Right-click <kbd>Rimlight.zip</kbd> in your Downloads → <b style="display:inline">Extract All</b>, then open <kbd>Rimlight.exe</kbd>.</span></div></li>
+        <li class="key"><div><b>Windows will warn you — that's normal</b><span>Rimlight is a free app without a paid Microsoft certificate, so Windows shows <i>“Windows protected your PC”</i>. Click <kbd>More info</kbd>, then <kbd>Run anyway</kbd>. You only do this once.</span></div></li>
+        <li><div><b>If it asks for .NET, click Yes</b><span>Some PCs need Microsoft's free <i>.NET Desktop Runtime 8</i>. Install the x64 version, then open Rimlight again.</span></div></li>
+      </ol>
+      <div>
+        <div class="ss" id="ss" aria-hidden="true">
+          <h4>Windows protected your PC</h4>
+          <p>Microsoft Defender SmartScreen prevented an unrecognized app from starting. Running this app might put your PC at risk.</p>
+          <span class="more" id="ssMore">More info</span>
+          <div class="meta">App: Rimlight.exe<br>Publisher: Unknown publisher</div>
+          <div class="btns"><span class="run" id="ssRun">Run anyway</span><span>Don't run</span></div>
+          <i class="tap" id="ssTap"></i>
+        </div>
+        <p class="ss-cap" id="ssCap">Click <b>More info</b>…</p>
+      </div>
+    </div>
+    <div class="g-foot">
+      <span>Download didn't start? <a id="guideRetry" href="Rimlight.zip" download>Try again</a></span>
+      <button class="g-ok" type="button" id="guideOk">Got it</button>
+    </div>
+  </div>
+</dialog>
 
 <footer>
   <span class="mono">Rimlight — light &amp; lyrics for Windows</span>
@@ -427,6 +498,33 @@ footer{padding:34px var(--pad) 46px;border-top:1px solid var(--line);display:fle
 (() => {
 "use strict";
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ===================== download + what-to-do-next guide ===================== */
+// Change this one line to your GitHub release, e.g.
+// "https://github.com/YOUR-USERNAME/rimlight/releases/latest/download/Rimlight.zip"
+const DOWNLOAD_URL = "Rimlight.zip";
+{
+  const btn = document.getElementById("downloadBtn"), guide = document.getElementById("guide"), retry = document.getElementById("guideRetry");
+  btn.href = retry.href = DOWNLOAD_URL;
+  const ss = document.getElementById("ss"), tap = document.getElementById("ssTap"), cap = document.getElementById("ssCap");
+  let timer = 0;
+  // the little picture acts it out: tap "More info", then tap "Run anyway", and repeat
+  function place(el) { const r = el.getBoundingClientRect(), b = ss.getBoundingClientRect(); tap.style.left = (r.left - b.left + r.width / 2 - 15) + "px"; tap.style.top = (r.top - b.top + r.height / 2 - 15) + "px"; }
+  function act(step) {
+    ss.classList.toggle("step2", step === 2);
+    place(step === 1 ? document.getElementById("ssMore") : document.getElementById("ssRun"));
+    cap.innerHTML = step === 1 ? "Click <b>More info</b>…" : "…then <b>Run anyway</b>. Done!";
+    timer = setTimeout(() => act(step === 1 ? 2 : 1), step === 1 ? 2200 : 3000);
+  }
+  function open() { if (!guide.open) guide.showModal(); clearTimeout(timer); requestAnimationFrame(() => act(1)); }
+  function close() { clearTimeout(timer); guide.close(); }
+  // the download still starts normally; the guide just opens alongside it
+  btn.addEventListener("click", () => setTimeout(open, 150));
+  document.getElementById("guideClose").addEventListener("click", close);
+  document.getElementById("guideOk").addEventListener("click", close);
+  guide.addEventListener("click", e => { if (e.target === guide) close(); });
+  guide.addEventListener("close", () => clearTimeout(timer));
+}
 const TAU = Math.PI * 2, clamp = (v, a, b) => Math.max(a, Math.min(b, v)), lerp = (a, b, t) => a + (b - a) * t, frac = v => v - Math.floor(v);
 const hex = h => { const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
 const hash = (k, s) => frac(Math.sin(k * 12.9898 + s * 78.233) * 43758.5453);

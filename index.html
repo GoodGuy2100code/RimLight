@@ -449,7 +449,7 @@ footer{padding:34px var(--pad) 46px;border-top:1px solid var(--line);display:fle
 <section class="finale" id="get" data-pal="9" aria-labelledby="getTitle">
   <h2 id="getTitle" class="reveal">Turn it <span class="serif grad">up.</span></h2>
   <p class="sub reveal">One small download. Your screen won't look the same with music on.</p>
-  <a class="dl reveal" id="downloadBtn" href="Rimlight.zip" download><svg aria-hidden="true"><use href="#i-win"/></svg>Download for Windows</a>
+  <a class="dl reveal" id="downloadBtn" href="https://github.com/GoodGuy2100code/RimLight/raw/main/Rimlight.zip" download><svg aria-hidden="true"><use href="#i-win"/></svg>Download for Windows</a>
   <p class="mono reveal">Windows 10 &amp; 11 · 64‑bit · no account · no installer · free</p>
 </section>
 </main>
@@ -483,7 +483,7 @@ footer{padding:34px var(--pad) 46px;border-top:1px solid var(--line);display:fle
       </div>
     </div>
     <div class="g-foot">
-      <span>Download didn't start? <a id="guideRetry" href="Rimlight.zip" download>Try again</a></span>
+      <span>Download didn't start? <a id="guideRetry" href="https://github.com/GoodGuy2100code/RimLight/raw/main/Rimlight.zip" download>Try again</a></span>
       <button class="g-ok" type="button" id="guideOk">Got it</button>
     </div>
   </div>
@@ -502,7 +502,7 @@ const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 /* ===================== download + what-to-do-next guide ===================== */
 // Change this one line to your GitHub release, e.g.
 // "https://github.com/YOUR-USERNAME/rimlight/releases/latest/download/Rimlight.zip"
-const DOWNLOAD_URL = "Rimlight.zip";
+const DOWNLOAD_URL = "https://github.com/GoodGuy2100code/RimLight/raw/main/Rimlight.zip";
 {
   const btn = document.getElementById("downloadBtn"), guide = document.getElementById("guide"), retry = document.getElementById("guideRetry");
   btn.href = retry.href = DOWNLOAD_URL;

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rimlight — Light that listens</title>
-<meta name="description" content="Rimlight wraps your Windows screen in a living ring of light that moves with your music, with word-by-word lyrics in English, Hindi, Bangla and Punjabi.">
+<meta name="description" content="Rimlight wraps your Windows PC or Android phone screen in a living ring of light that moves with your music, with word-by-word lyrics in English, Hindi, Bangla and Punjabi.">
 <meta name="theme-color" content="#060509">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,11 +24,11 @@
   --mono:"JetBrains Mono",ui-monospace,monospace;
   --indic:"Noto Sans Devanagari","Noto Sans Bengali","Noto Sans Gurmukhi";
   --ease:cubic-bezier(.22,1,.36,1);
-  --pad:clamp(28px,5vw,72px);
+  --pad:max(clamp(28px,5vw,72px), calc((100vw - 1680px) / 2));   /* content never wider than 1680px on ultrawide screens */
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;overflow-x:clip}
-body{background:var(--bg);color:var(--ink);font-family:var(--display);font-size:17px;line-height:1.55;overflow-x:clip;-webkit-font-smoothing:antialiased;min-width:1024px}
+body{background:var(--bg);color:var(--ink);font-family:var(--display);font-size:17px;line-height:1.55;overflow-x:clip;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 :focus-visible{outline:2px solid #fff;outline-offset:4px;border-radius:6px}
@@ -248,6 +248,176 @@ footer{padding:34px var(--pad) 46px;border-top:1px solid var(--line);display:fle
 
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
 .reveal.in{opacity:1;transform:none}
+
+/* ---------- two downloads ---------- */
+.dl-row{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.dl-row .dl{position:relative;height:74px;padding:0 30px 0 24px;gap:14px;text-align:left}
+.dl-row .dl span{display:flex;flex-direction:column;line-height:1.15}
+.dl-row .dl b{font-size:18px;font-weight:800}
+.dl-row .dl small{font-size:12.5px;font-weight:500;opacity:.62;margin-top:3px}
+.dl-row .dl svg{width:26px;height:26px;flex:none}
+.dl-row .dl.alt{background:rgba(255,255,255,.06);color:var(--ink);border:1px solid var(--line-2);box-shadow:none}
+.dl-row .dl.alt:hover{background:rgba(255,255,255,.1)}
+.dl .rec{display:none;position:absolute;top:-11px;left:50%;transform:translateX(-50%);font-style:normal;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;padding:4px 10px;border-radius:999px;background:var(--accent);color:#120810;font-weight:600}
+.dl.is-rec .rec{display:block}
+.hidden{display:none!important}
+
+/* ---------- android install animation (a little phone) ---------- */
+.phone{position:relative;width:min(230px,100%);aspect-ratio:9/16.5;margin:0 auto;border-radius:30px;background:#111016;border:7px solid #26232f;overflow:hidden;box-shadow:0 20px 60px -20px color-mix(in srgb,var(--c2) 50%,transparent);font-family:Roboto,system-ui,sans-serif}
+.ph-screen{position:absolute;inset:0;padding:22px 14px;transition:opacity .45s,transform .45s var(--ease)}
+.ph-a{background:#1b1b1f}
+.ph-b{background:#1b1b1f;opacity:0;transform:translateY(14px);display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:18px}
+.phone.step2 .ph-a{opacity:0}
+.phone.step2 .ph-b{opacity:1;transform:none}
+.ph-title{font-size:16px;font-weight:500;margin-bottom:16px}
+.ph-app{display:flex;gap:10px;align-items:center;margin-bottom:16px}
+.ph-app i{width:30px;height:30px;border-radius:50%;background:conic-gradient(#ea4335 0 33%,#fbbc05 0 66%,#34a853 0);flex:none}
+.ph-app i.rl{border-radius:10px;background:#0b0912;border:3px solid transparent;background:linear-gradient(#0b0912,#0b0912) padding-box,var(--accent) border-box;width:38px;height:38px}
+.ph-app b{display:block;font-size:13.5px;font-weight:500}
+.ph-app small{font-size:11.5px;color:#a6a3ad}
+.ph-app.big{flex-direction:column;align-items:flex-start;background:#26252c;border-radius:20px 20px 0 0;padding:16px 14px 6px;margin:0 -14px}
+.ph-row{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12.5px;padding:12px 0;border-top:1px solid rgba(255,255,255,.08)}
+.ph-sw{width:34px;height:20px;border-radius:999px;background:#4a4752;position:relative;flex:none;transition:background .3s}
+.ph-sw::after{content:"";position:absolute;left:3px;top:3px;width:14px;height:14px;border-radius:50%;background:#cfcbd6;transition:transform .3s var(--ease),background .3s}
+.ph-sw.on{background:#a8c7fa}
+.ph-sw.on::after{transform:translateX(14px);background:#062e6f}
+.ph-btns{display:flex;justify-content:flex-end;gap:16px;background:#26252c;margin:0 -14px;padding:10px 16px 14px;border-radius:0 0 20px 20px;font-size:13px;color:#a8c7fa;font-weight:500}
+.phone .tap{position:absolute;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.9);transition:left .7s var(--ease),top .7s var(--ease);animation:tap 1.4s ease-out infinite;pointer-events:none;z-index:2}
+/* ---------- wrong device card ---------- */
+.device-card .g-card{max-width:460px;text-align:center}
+.device-card .big{font-size:54px;line-height:1;margin:6px 0 10px}
+.device-card h3{font-weight:800;font-size:26px;letter-spacing:-.03em;line-height:1.1}
+.device-card p{color:var(--muted);margin-top:8px}
+.device-card .acts{display:flex;flex-direction:column;gap:10px;margin-top:22px}
+.device-card .acts button,.device-card .acts a{height:48px;border-radius:999px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px}
+.device-card .acts .primary{background:var(--ink);color:#0A0910}
+.device-card .acts .ghost{border:1px solid var(--line-2);color:var(--ink)}
+.device-card .done{color:#4AE39B;font-size:14px;min-height:20px;margin-top:10px}
+
+/* ======================= tablets ======================= */
+@media (max-width:1023px){
+  :root{--pad:clamp(20px,4.5vw,40px)}
+  .nav-links{display:none}
+  .hero{height:auto;min-height:100svh;padding-top:110px;display:flex;flex-direction:column;gap:20px}
+  .headline{font-size:clamp(64px,15vw,150px);align-self:flex-start}
+  .headline .row2{margin-left:.6em}
+  .hero-lyrics{position:relative;right:auto;top:auto;width:100%;height:clamp(220px,46vw,380px)}
+  .hero-bottom{grid-template-columns:1fr;justify-items:start;gap:22px}
+  .player{justify-self:stretch;width:100%}
+  .marquee .track{font-size:56px;gap:30px}
+  .tour{height:420vh}
+  .tour-sticky{grid-template-columns:1fr;align-content:center;gap:28px}
+  .style-name{font-size:clamp(64px,14vw,130px)}
+  .style-desc{font-size:18px;min-height:2.8em}
+  .style-index li{padding:10px 4px;grid-template-columns:40px 1fr auto}
+  .style-index li .nm{font-size:20px}
+  .lyrics{height:100svh;min-height:640px}
+  .ly-corner.tl{top:88px;max-width:calc(100% - 2 * var(--pad))}
+  .ly-corner.tl h2{font-size:clamp(30px,7vw,48px)}
+  .ly-corner.bl{right:var(--pad);bottom:20px}
+  .ly-corner.br{left:var(--pad);right:var(--pad);top:auto;bottom:122px;align-items:flex-start}
+  .swipe-hint{top:auto;bottom:178px}
+  .style-row{flex-wrap:nowrap;overflow-x:auto;max-width:100%;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .style-row::-webkit-scrollbar{display:none}
+  .style-row button{flex:none}
+  .side{grid-template-columns:1fr;padding:100px var(--pad);gap:40px}
+  .sleeve{position:relative;top:auto;max-width:420px}
+  .side h2,.modes-head h2{font-size:clamp(44px,10vw,68px)}
+  .modes{padding:100px var(--pad)}
+  .modes-head{flex-direction:column;align-items:flex-start;gap:16px}
+  .mode-grid{grid-template-columns:repeat(2,1fr)}
+  .notes{grid-template-columns:1fr;padding:100px var(--pad);gap:28px}
+  .notes h2{font-size:48px}
+  .faq{grid-column:auto}
+  .finale{height:auto;min-height:90svh;padding:100px var(--pad)}
+  .finale h2{font-size:clamp(72px,19vw,180px)}
+  .g-steps{grid-template-columns:1fr}
+}
+
+/* ======================= phones ======================= */
+@media (max-width:640px){
+  body{font-size:16px}
+  .nav{top:12px}
+  .mark{font-size:18px}
+  .get{height:40px;padding:0 14px;font-size:14px}
+  .hero{padding-top:92px}
+  .hero-top{flex-direction:column;gap:6px}
+  .hero-top .mono{font-size:10.5px}
+  .headline{font-size:clamp(54px,17vw,90px)}
+  .hero-copy{font-size:16px}
+  .press{width:120px;height:120px}
+  .press .core{width:68px;height:68px}
+  .marquee{padding:16px 0}
+  .marquee .track{font-size:38px;gap:22px}
+  .style-index li .tg{display:none}
+  .chapter{gap:14px}
+  .ly-corner.tl .mono{font-size:10.5px}
+  .switch button{height:34px;padding:0 12px;font-size:13px}
+  .word-fx button{height:32px;padding:0 11px;font-size:16px}
+  .ly-corner.br .mono{display:none}
+  .swipe-hint{top:auto;bottom:170px;font-size:13px;gap:8px}
+  .swipe-hint i{width:24px;height:24px}
+  .track{grid-template-columns:36px 1fr;padding:18px 4px}
+  .track .tg{display:none}
+  .track h3{font-size:21px}
+  .side .lead{font-size:17px}
+  .mode-grid{grid-template-columns:1fr}
+  .cols{grid-template-columns:1fr;gap:22px}
+  summary{font-size:18px}
+  .dl{height:56px;padding:0 24px;font-size:17px}
+  footer{flex-direction:column;gap:8px;text-align:center}
+  .g-card{padding:22px 20px 20px;border-radius:20px}
+  .g-head h3{font-size:24px}
+  .ss{min-height:220px}
+}
+
+
+/* ======================= any aspect ratio ======================= */
+/* short, wide screens: phones on their side, small laptop windows */
+@media (orientation:landscape) and (max-height:560px){
+  .hero{height:auto;min-height:100svh;padding-top:84px;padding-bottom:24px}
+  .headline{font-size:clamp(52px,19vh,120px)}
+  .hero-lyrics{display:none}
+  .hero-bottom{grid-template-columns:1fr auto;gap:20px}
+  .hero-bottom .player{display:none}
+  .press{width:110px;height:110px}
+  .tour-sticky{grid-template-columns:1.1fr .9fr;gap:4vw;padding-top:60px}
+  .style-name{font-size:clamp(48px,20vh,110px)}
+  .style-desc{font-size:15px;min-height:2.8em}
+  .style-index li{padding:6px 4px}
+  .style-index li .nm{font-size:16px}
+  .lyrics{height:100svh;min-height:360px}
+  .ly-corner.tl{top:70px}
+  .ly-corner.tl h2{font-size:26px;margin-top:4px}
+  .ly-corner.tl .mono{display:none}
+  .ly-corner.br{left:auto;right:var(--pad);top:auto;bottom:14px;align-items:flex-end}
+  .ly-corner.br .mono{display:none}
+  .ly-corner.bl{bottom:14px;right:auto;max-width:58%}
+  .ly-corner.bl .switch[aria-label="Language"]{display:none}
+  .swipe-hint{bottom:auto;top:72px;left:auto;right:var(--pad);transform:none}
+  .side{grid-template-columns:.6fr 1.4fr;padding:80px var(--pad);gap:5vw}
+  .sleeve{position:sticky;top:80px;max-width:240px}
+  .side h2,.modes-head h2{font-size:42px}
+  .finale{height:auto;min-height:100svh;padding:80px var(--pad) 50px;gap:22px}
+  .finale h2{font-size:clamp(64px,24vh,140px)}
+  .finale .sub{font-size:16px}
+  .dl-row .dl{height:62px}
+  .g-card{max-height:calc(100svh - 24px);overflow-y:auto}
+  .g-steps{grid-template-columns:1fr 200px}
+  .phone{width:180px}
+}
+/* very wide screens: keep the big type in proportion */
+@media (min-aspect-ratio:21/10){
+  .headline{font-size:clamp(96px,10vw,220px)}
+  .hero-lyrics{width:34%}
+  .finale h2{font-size:clamp(120px,12vw,240px)}
+}
+@media (max-width:640px){
+  .dl-row{flex-direction:column;align-items:stretch;width:100%;max-width:420px}
+  .dl-row .dl{height:66px;justify-content:flex-start}
+  .dl-row .dl b{font-size:16.5px}
+}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
   .reveal{opacity:1;transform:none}
@@ -262,6 +432,8 @@ footer{padding:34px var(--pad) 46px;border-top:1px solid var(--line);display:fle
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-win" viewBox="0 0 24 24"><path fill="currentColor" d="M3 5.5 10.5 4.5v7H3v-6Zm0 13 7.5 1v-7H3v6Zm8.5 1.1L21 21v-8.5h-9.5v7.1Zm0-15.2v7.1H21V3l-9.5 1.4Z"/></symbol>
+  <symbol id="i-android" viewBox="0 0 24 24"><path fill="currentColor" d="M6 18c0 .55.45 1 1 1h1v3.5a1.5 1.5 0 0 0 3 0V19h2v3.5a1.5 1.5 0 0 0 3 0V19h1c.55 0 1-.45 1-1V8H6v10ZM3.5 8A1.5 1.5 0 0 0 2 9.5v7a1.5 1.5 0 0 0 3 0v-7A1.5 1.5 0 0 0 3.5 8Zm17 0A1.5 1.5 0 0 0 19 9.5v7a1.5 1.5 0 0 0 3 0v-7A1.5 1.5 0 0 0 20.5 8Zm-4.97-5.84 1.3-1.3a.5.5 0 0 0-.7-.7l-1.48 1.48A5.96 5.96 0 0 0 12 1c-.96 0-1.86.23-2.66.63L7.85.15a.5.5 0 0 0-.7.7l1.31 1.31A5.97 5.97 0 0 0 6 7h12a5.97 5.97 0 0 0-2.47-4.84ZM10 5H9V4h1v1Zm5 0h-1V4h1v1Z"/></symbol>
+  <symbol id="i-dl" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/></symbol>
   <symbol id="i-play" viewBox="0 0 24 24"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z"/></symbol>
   <symbol id="i-pause" viewBox="0 0 24 24"><path fill="currentColor" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></symbol>
   <symbol id="i-heart" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21s-7.5-4.6-9.6-9.3C.9 8.3 3 4.5 6.7 4.5c2.1 0 3.6 1.2 4.3 2.4.1.2.4.2.5 0 .8-1.2 2.3-2.4 4.4-2.4 3.7 0 5.8 3.8 4.3 7.2C19.5 16.4 12 21 12 21Z"/></symbol>
@@ -279,14 +451,14 @@ footer{padding:34px var(--pad) 46px;border-top:1px solid var(--line);display:fle
     <a href="#modes">Modes</a>
     <a href="#notes">FAQ</a>
   </nav>
-  <a class="get" href="#get"><svg aria-hidden="true"><use href="#i-win"/></svg>Get Rimlight</a>
+  <a class="get" href="#get">Get Rimlight</a>
 </header>
 
 <main id="main">
 <!-- ================= HERO ================= -->
 <section class="hero" id="top" data-pal="0" aria-labelledby="h1">
   <div class="hero-top">
-    <p class="mono">Ambient light · Synced lyrics · <span>Windows 10 &amp; 11</span></p>
+    <p class="mono">Ambient light · Synced lyrics · <span>Windows &amp; Android</span></p>
     <p class="mono">Look at the edges of this page&nbsp;↗</p>
   </div>
 
@@ -431,12 +603,13 @@ footer{padding:34px var(--pad) 46px;border-top:1px solid var(--line);display:fle
   <h2 id="notesTitle" class="reveal">Liner notes</h2>
   <div>
     <div class="cols reveal">
-      <div><h4>Works with</h4><p>Spotify — app and web. YouTube Music in Chrome, Edge, Firefox, Brave or Opera. Anything that plays sound on your PC.</p></div>
-      <div><h4>You'll need</h4><p>Windows 10 (1809+) or Windows 11, 64‑bit. One or more monitors, any refresh rate.</p></div>
+      <div><h4>Works with</h4><p>Spotify, YouTube Music, JioSaavn, Apple Music and any player — on PC, in your browser or on your phone.</p></div>
+      <div><h4>You'll need</h4><p>A PC with Windows 10 (1809+) or 11, 64‑bit — or an Android 8+ phone or tablet. Any screen, any refresh rate.</p></div>
       <div><h4>Lyrics from</h4><p>Free, open lyric databases — many songs with exact per‑word timing. Fix any song's timing yourself.</p></div>
     </div>
     <div class="faq">
-      <details class="reveal"><summary>Does it use my microphone? <span>+</span></summary><p>No. Rimlight only listens to the sound your PC is already playing. It never opens your microphone.</p></details>
+      <details class="reveal"><summary>Does it use my microphone? <span>+</span></summary><p>On Windows, no — it only listens to the sound your PC is already playing. On Android, the system calls it “microphone” permission, but Rimlight only reads what your phone is playing. Nothing is ever recorded or sent anywhere.</p></details>
+      <details class="reveal"><summary>Is there a phone app? <span>+</span></summary><p>Yes — Rimlight for Android puts the ring around your phone's screen over every app, with floating lyrics, a mini player and all ten fullscreen lyric styles. It works in portrait and landscape. iPhone isn't supported: iOS doesn't let apps draw over other apps.</p></details>
       <details class="reveal"><summary>Will it slow down games? <span>+</span></summary><p>It fades away when a game or video is fullscreen, drops to 30 fps on battery and shows its own fps and CPU use in settings.</p></details>
       <details class="reveal"><summary>Can I keep just the light? <span>+</span></summary><p>Yes — "Light ring only" is the default. Lyrics, the player and every extra are optional, and each has its own switch.</p></details>
       <details class="reveal"><summary>How do I change the lyrics style? <span>+</span></summary><p>In fullscreen, drag the lyrics left or right, tap the arrows, or hold Tab to see all ten styles playing your song and pick one. The tray menu has them too.</p></details>
@@ -448,11 +621,32 @@ footer{padding:34px var(--pad) 46px;border-top:1px solid var(--line);display:fle
 <!-- ================= FINALE ================= -->
 <section class="finale" id="get" data-pal="9" aria-labelledby="getTitle">
   <h2 id="getTitle" class="reveal">Turn it <span class="serif grad">up.</span></h2>
-  <p class="sub reveal">One small download. Your screen won't look the same with music on.</p>
-  <a class="dl reveal" id="downloadBtn" href="https://github.com/GoodGuy2100code/RimLight/raw/main/Rimlight.zip" download><svg aria-hidden="true"><use href="#i-win"/></svg>Download for Windows</a>
-  <p class="mono reveal">Windows 10 &amp; 11 · 64‑bit · no account · no installer · free</p>
+  <p class="sub reveal">One small download for your PC or your phone. Your screen won't look the same with music on.</p>
+  <div class="dl-row reveal" id="dlRow">
+    <a class="dl" id="downloadBtn" data-os="win" href="https://github.com/GoodGuy2100code/RimLight/raw/main/Rimlight.zip" download>
+      <svg aria-hidden="true"><use href="#i-win"/></svg><span><b>Download for Windows</b><small>Windows 10 &amp; 11 · 64‑bit · ZIP</small></span><em class="rec">For this device</em></a>
+    <a class="dl" id="androidBtn" data-os="android" href="https://github.com/GoodGuy2100code/RimLight/raw/main/Rimlight.apk" download>
+      <svg aria-hidden="true"><use href="#i-android"/></svg><span><b>Download for Android</b><small>Android 8+ · phones &amp; tablets · APK</small></span><em class="rec">For this device</em></a>
+  </div>
+  <p class="mono reveal">Free · no account · no ads · nothing recorded</p>
 </section>
 </main>
+
+<!-- shown instead of downloading on phones, tablets and Macs -->
+<dialog class="guide device-card" id="deviceCard" aria-labelledby="deviceTitle">
+  <div class="g-card">
+    <div class="big" aria-hidden="true" id="deviceIcon">💻</div>
+    <h3 id="deviceTitle">Rimlight is a Windows app</h3>
+    <p id="deviceText">It lights up the edges of a Windows PC screen, so it can't run on this device. Open this page on your Windows 10 or 11 PC to download it.</p>
+    <div class="acts">
+      <button class="primary hidden" type="button" id="deviceAlt"></button>
+      <button class="primary" type="button" id="deviceShare">Send the link to my PC</button>
+      <button class="ghost" type="button" id="deviceCopy">Copy link</button>
+      <button class="ghost" type="button" id="deviceClose">Got it</button>
+    </div>
+    <div class="done" id="deviceDone" aria-live="polite"></div>
+  </div>
+</dialog>
 
 <!-- shown right after clicking Download: what to do next, and why Windows shows a warning -->
 <dialog class="guide" id="guide" aria-labelledby="guideTitle">
@@ -489,8 +683,48 @@ footer{padding:34px var(--pad) 46px;border-top:1px solid var(--line);display:fle
   </div>
 </dialog>
 
+<!-- shown after clicking Download for Android -->
+<dialog class="guide" id="aguide" aria-labelledby="aguideTitle">
+  <div class="g-card">
+    <div class="g-head">
+      <div>
+        <h3 id="aguideTitle">Your download has started 🎉</h3>
+        <p id="aguideSub">Four quick steps and your phone lights up.</p>
+      </div>
+      <button class="g-x" type="button" id="aguideClose" aria-label="Close">✕</button>
+    </div>
+    <div class="g-steps">
+      <ol class="g-list">
+        <li class="hidden" id="aStepSend"><div><b>Get the file onto your phone</b><span>Send <kbd>Rimlight.apk</kbd> to yourself (WhatsApp, Telegram, Google Drive or a USB cable) — or simply open this page on your phone and tap Download there.</span></div></li>
+        <li><div><b>Open Rimlight.apk</b><span>Tap the download notification, or find it in <b style="display:inline">Files → Downloads</b>.</span></div></li>
+        <li class="key"><div><b>Allow installing it — that's normal</b><span>Rimlight isn't from the Play Store, so Android asks first. Tap <kbd>Settings</kbd>, switch on <kbd>Allow from this source</kbd>, go back and tap <kbd>Install</kbd>. If Play Protect warns you, tap <kbd>More details</kbd> → <kbd>Install anyway</kbd>.</span></div></li>
+        <li><div><b>Open it and follow the welcome guide</b><span>It asks for notification access (to see the song), listening (so the light can move) and drawing over other apps (for the ring). Nothing is recorded.</span></div></li>
+      </ol>
+      <div>
+        <div class="phone" id="aphone" aria-hidden="true">
+          <div class="ph-screen ph-a">
+            <div class="ph-title">Install unknown apps</div>
+            <div class="ph-app"><i></i><div><b>Chrome</b><small>Downloads</small></div></div>
+            <div class="ph-row">Allow from this source<span class="ph-sw" id="aSw"></span></div>
+          </div>
+          <div class="ph-screen ph-b">
+            <div class="ph-app big"><i class="rl"></i><div><b>Rimlight</b><small>Do you want to install this app?</small></div></div>
+            <div class="ph-btns"><span>Cancel</span><span class="ph-install" id="aInstall">Install</span></div>
+          </div>
+          <i class="tap" id="aTap"></i>
+        </div>
+        <p class="ss-cap" id="aCap">Switch on <b>Allow from this source</b>…</p>
+      </div>
+    </div>
+    <div class="g-foot">
+      <span>Download didn't start? <a id="aguideRetry" href="https://github.com/GoodGuy2100code/RimLight/raw/main/Rimlight.apk" download>Try again</a></span>
+      <button class="g-ok" type="button" id="aguideOk">Got it</button>
+    </div>
+  </div>
+</dialog>
+
 <footer>
-  <span class="mono">Rimlight — light &amp; lyrics for Windows</span>
+  <span class="mono">Rimlight — light &amp; lyrics for Windows and Android</span>
   <span class="mono">Made for people who listen with their eyes too</span>
 </footer>
 
@@ -500,30 +734,117 @@ footer{padding:34px var(--pad) 46px;border-top:1px solid var(--line);display:fle
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /* ===================== download + what-to-do-next guide ===================== */
-// Change this one line to your GitHub release, e.g.
-// "https://github.com/YOUR-USERNAME/rimlight/releases/latest/download/Rimlight.zip"
+// Where the two downloads live (files in the root of the GitHub repo)
 const DOWNLOAD_URL = "https://github.com/GoodGuy2100code/RimLight/raw/main/Rimlight.zip";
+const ANDROID_URL = "https://github.com/GoodGuy2100code/RimLight/raw/main/Rimlight.apk";
 {
-  const btn = document.getElementById("downloadBtn"), guide = document.getElementById("guide"), retry = document.getElementById("guideRetry");
-  btn.href = retry.href = DOWNLOAD_URL;
-  const ss = document.getElementById("ss"), tap = document.getElementById("ssTap"), cap = document.getElementById("ssCap");
+  const $ = id => document.getElementById(id);
+  const winBtn = $("downloadBtn"), andBtn = $("androidBtn");
+  winBtn.href = $("guideRetry").href = DOWNLOAD_URL;
+  andBtn.href = $("aguideRetry").href = ANDROID_URL;
+
+  /* ---- which device is this? ---- */
+  const ua = navigator.userAgent || "", uad = navigator.userAgentData;
+  const isAndroid = /Android/i.test(ua) || (uad && /Android/i.test(uad.platform || ""));
+  const isIOS = /iPhone|iPad|iPod/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  const isWindows = !isAndroid && (/Windows/i.test(ua) || (uad && /Windows/i.test(uad.platform || "")));
+  const isMac = !isIOS && /Mac/i.test(ua);
+  const other = !isAndroid && !isIOS && !isWindows;
+  // the button for this device goes first and gets a badge; the other one is quieter
+  const rec = isAndroid ? andBtn : isWindows ? winBtn : null;
+  if (rec) {
+    rec.classList.add("is-rec");
+    const alt = rec === winBtn ? andBtn : winBtn;
+    alt.classList.add("alt");
+    if (rec === andBtn) andBtn.parentNode.insertBefore(andBtn, winBtn);
+  } else andBtn.classList.add("alt");
+
+  /* ---- Windows guide (unzip, SmartScreen) ---- */
+  const guide = $("guide"), ss = $("ss"), tap = $("ssTap"), cap = $("ssCap");
   let timer = 0;
-  // the little picture acts it out: tap "More info", then tap "Run anyway", and repeat
-  function place(el) { const r = el.getBoundingClientRect(), b = ss.getBoundingClientRect(); tap.style.left = (r.left - b.left + r.width / 2 - 15) + "px"; tap.style.top = (r.top - b.top + r.height / 2 - 15) + "px"; }
+  function placeIn(box, t, el) { const r = el.getBoundingClientRect(), b = box.getBoundingClientRect(); t.style.left = (r.left - b.left + r.width / 2 - t.offsetWidth / 2) + "px"; t.style.top = (r.top - b.top + r.height / 2 - t.offsetHeight / 2) + "px"; }
   function act(step) {
     ss.classList.toggle("step2", step === 2);
-    place(step === 1 ? document.getElementById("ssMore") : document.getElementById("ssRun"));
+    placeIn(ss, tap, step === 1 ? $("ssMore") : $("ssRun"));
     cap.innerHTML = step === 1 ? "Click <b>More info</b>…" : "…then <b>Run anyway</b>. Done!";
     timer = setTimeout(() => act(step === 1 ? 2 : 1), step === 1 ? 2200 : 3000);
   }
-  function open() { if (!guide.open) guide.showModal(); clearTimeout(timer); requestAnimationFrame(() => act(1)); }
-  function close() { clearTimeout(timer); guide.close(); }
-  // the download still starts normally; the guide just opens alongside it
-  btn.addEventListener("click", () => setTimeout(open, 150));
-  document.getElementById("guideClose").addEventListener("click", close);
-  document.getElementById("guideOk").addEventListener("click", close);
-  guide.addEventListener("click", e => { if (e.target === guide) close(); });
+  function openWin() { if (!guide.open) guide.showModal(); clearTimeout(timer); requestAnimationFrame(() => act(1)); }
+  function closeWin() { clearTimeout(timer); guide.close(); }
+  $("guideClose").addEventListener("click", closeWin);
+  $("guideOk").addEventListener("click", closeWin);
+  guide.addEventListener("click", e => { if (e.target === guide) closeWin(); });
   guide.addEventListener("close", () => clearTimeout(timer));
+
+  /* ---- Android guide (allow from this source → install) ---- */
+  const ag = $("aguide"), ph = $("aphone"), aTap = $("aTap"), aCap = $("aCap"), aSw = $("aSw");
+  let aTimer = 0;
+  function aAct(step) {
+    // 1: tap the switch  2: it turns on  3: the install sheet, tap Install
+    ph.classList.toggle("step2", step === 3);
+    aSw.classList.toggle("on", step >= 2);
+    if (step < 3) placeIn(ph, aTap, aSw); else placeIn(ph, aTap, $("aInstall"));
+    aCap.innerHTML = step === 1 ? "Switch on <b>Allow from this source</b>…" : step === 2 ? "…go back…" : "…and tap <b>Install</b>. Done!";
+    aTimer = setTimeout(() => aAct(step === 3 ? 1 : step + 1), step === 1 ? 1800 : step === 2 ? 1100 : 2800);
+  }
+  function openAndroid() {
+    // on a computer, the first step is getting the file onto the phone
+    $("aStepSend").classList.toggle("hidden", isAndroid);
+    $("aguideTitle").textContent = isAndroid ? "Your download has started 🎉" : "Downloading the Android app 📱";
+    $("aguideSub").textContent = isAndroid ? "Three quick steps and your phone lights up." : "This is the app for Android phones and tablets. Here's how to put it on yours.";
+    if (!ag.open) ag.showModal(); clearTimeout(aTimer); requestAnimationFrame(() => aAct(1));
+  }
+  function closeAndroid() { clearTimeout(aTimer); ag.close(); }
+  $("aguideClose").addEventListener("click", closeAndroid);
+  $("aguideOk").addEventListener("click", closeAndroid);
+  ag.addEventListener("click", e => { if (e.target === ag) closeAndroid(); });
+  ag.addEventListener("close", () => clearTimeout(aTimer));
+
+  /* ---- "not for this device" card ---- */
+  const card = $("deviceCard"), done = $("deviceDone"), altBtn = $("deviceAlt"), shareBtn = $("deviceShare");
+  const pageUrl = location.href.split("#")[0];
+  let shareTo = "PC";
+  function explain(kind) {
+    done.textContent = ""; altBtn.classList.add("hidden"); altBtn.onclick = null;
+    let icon = "💻", title = "", text = "";
+    if (kind === "win-on-android") {
+      icon = "📱"; title = "You're on an Android phone"; text = "The Windows download is for PCs. Rimlight has an Android app too — same light ring, same lyrics, made for your phone.";
+      altBtn.textContent = "Get the Android app instead"; altBtn.classList.remove("hidden");
+      altBtn.onclick = () => { card.close(); location.href = ANDROID_URL; setTimeout(openAndroid, 150); };
+      shareTo = "PC";
+    } else if (kind === "ios") {
+      icon = "🍎"; title = "Not on iPhone or iPad yet"; text = "Apple doesn't let apps draw a light ring over other apps, so Rimlight runs on Windows PCs and Android phones. Send yourself the link to get it on one of those.";
+      shareTo = "PC or Android phone";
+    } else {
+      icon = "💻"; title = "Rimlight is for Windows and Android";
+      text = "This looks like a " + (isMac ? "Mac" : /Linux|CrOS/i.test(ua) ? "Linux or ChromeOS computer" : "device Rimlight doesn't support yet") + ". Open this page on a Windows 10/11 PC or an Android phone to download it.";
+      shareTo = "PC or phone";
+    }
+    $("deviceIcon").textContent = icon; $("deviceTitle").textContent = title; $("deviceText").textContent = text;
+    shareBtn.textContent = "Send the link to my " + shareTo;
+    card.showModal();
+  }
+  shareBtn.addEventListener("click", async () => {
+    try { if (navigator.share) { await navigator.share({ title: "Rimlight", text: "Download Rimlight:", url: pageUrl }); return; } } catch (e) { return; }
+    location.href = "mailto:?subject=" + encodeURIComponent("Rimlight") + "&body=" + encodeURIComponent("Download Rimlight: " + pageUrl);
+  });
+  $("deviceCopy").addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(pageUrl); done.textContent = "✓ Link copied — open it on your " + shareTo; }
+    catch (e) { done.textContent = pageUrl; }
+  });
+  $("deviceClose").addEventListener("click", () => card.close());
+  card.addEventListener("click", e => { if (e.target === card) card.close(); });
+
+  /* ---- the two buttons ---- */
+  winBtn.addEventListener("click", e => {
+    if (isWindows) { setTimeout(openWin, 150); return; }        // download starts normally, the guide opens beside it
+    e.preventDefault();
+    explain(isAndroid ? "win-on-android" : isIOS ? "ios" : "other");
+  });
+  andBtn.addEventListener("click", e => {
+    if (isIOS) { e.preventDefault(); explain("ios"); return; }
+    setTimeout(openAndroid, 150);                                // on a PC it still downloads, with steps for moving it to a phone
+  });
 }
 const TAU = Math.PI * 2, clamp = (v, a, b) => Math.max(a, Math.min(b, v)), lerp = (a, b, t) => a + (b - a) * t, frac = v => v - Math.floor(v);
 const hex = h => { const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
@@ -1228,7 +1549,7 @@ function drawCode(ctx, W, H, eng, pos, visual) {
 function lyricsCanvas(canvas, opts) {
   const ctx = canvas.getContext("2d"), wfx = makeWordFx();
   let lang = "en", styleKey = opts.style || "ship", t0 = performance.now(), raf = 0, running = false, lastWord = null;
-  let swipe = 0, fade = 1, dragX = null, dragStart = 0;
+  let swipe = 0, fade = 1, dragX = null, dragStart = 0, safeAt = 0, safeBox = [0, 0];
   const KEYS = ["ship", "fisheye", "icons", "fisheyeIcons", "code", "codeIcons", "branches", "web", "constellation", "messages"];
   function size() { const r = canvas.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1); canvas.width = Math.max(10, r.width * d); canvas.height = Math.max(10, r.height * d); }
   function frame() {
@@ -1240,8 +1561,18 @@ function lyricsCanvas(canvas, opts) {
     if (opts.background) eng.drawBg(ctx, W, H, eng.BG[bgKey] ? bgKey : "ship", pos);
     if (opts.background) wfx.draw(ctx, W, H, music.beat);
     ctx.save(); ctx.globalAlpha = fade; ctx.translate(swipe, 0);
-    if (styleKey === "code" || styleKey === "codeIcons") drawCode(ctx, W, H, eng, pos, styleKey === "codeIcons");
-    else eng.render(ctx, W, H, styleKey, pos, false);
+    // draw the words only in the clear band between the heading and the controls (any screen shape),
+    // and on tall screens keep that band landscape-shaped so the words fit the width
+    let top = 0, band = H;
+    if (opts.safe) {
+      if (!safeAt || performance.now() - safeAt > 400) { safeAt = performance.now(); safeBox = opts.safe(canvas.getBoundingClientRect()); }
+      const d = W / Math.max(1, canvas.clientWidth);
+      top = safeBox[0] * d; band = Math.max(H * .35, (safeBox[1] - safeBox[0]) * d);
+    }
+    const Hv = W < band ? Math.min(band, W * .95) : band;
+    ctx.translate(0, top + (band - Hv) / 2);
+    if (styleKey === "code" || styleKey === "codeIcons") drawCode(ctx, W, Hv, eng, pos, styleKey === "codeIcons");
+    else eng.render(ctx, W, Hv, styleKey, pos, false);
     ctx.restore();
     // sung words like "red", "stars", "rain", "fire" set off their effect
     const w = eng.current(pos);
@@ -1270,8 +1601,15 @@ function lyricsCanvas(canvas, opts) {
 const heroLyrics = lyricsCanvas(document.getElementById("heroLyrics"), { style: "ship", background: false });
 if (!reduce) heroLyrics.start();
 const hint = document.getElementById("swipeHint");
+// the hint fades on its own a few seconds after the demo comes into view
+new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting) { setTimeout(() => hint.style.opacity = "0", 6000); o.disconnect(); } }), { threshold: .5 }).observe(document.getElementById("lyrics"));
 const bigLyrics = lyricsCanvas(document.getElementById("lyCanvas"), {
   style: "ship", background: true, swipe: true,
+  safe: r => {
+    const tl = document.querySelector("#lyrics .ly-corner.tl").getBoundingClientRect();
+    const low = Math.min(...[...document.querySelectorAll("#lyrics .ly-corner.bl, #lyrics .ly-corner.br")].map(e => e.getBoundingClientRect()).filter(b => b.height).map(b => b.top));
+    return [tl.bottom - r.top + 10, (isFinite(low) ? low : r.bottom) - r.top - 10];
+  },
   onStyle: k => document.querySelectorAll("[data-ly]").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.ly === k))),
   onSwipe: () => { hint.style.opacity = "0"; }
 });
